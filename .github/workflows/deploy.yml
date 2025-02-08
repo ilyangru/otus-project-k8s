@@ -45,3 +45,4 @@ jobs:
           terraform apply -auto-approve -input=false && \
           source ./.out/.env && \
           terraform output -json | kubeone apply -m ./.out/kubeone.yaml --auto-approve  -t -
+          terraform output -json

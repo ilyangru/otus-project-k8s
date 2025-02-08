@@ -33,5 +33,9 @@ jobs:
           terraform_version: 1.9.5
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Check TF version
         run: terraform version
+        
+      # Plan
+      - name: Terraform plan
+        run: cd ${{vars.BOOTSTRAP_DIR}} && terraform init && terraform plan 

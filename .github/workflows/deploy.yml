@@ -23,6 +23,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: 1.9.5
+          terraform_wrapper: false
 
       - name: Setup kubeone
         run: curl -sfL https://get.kubeone.io | sh
@@ -44,4 +45,4 @@ jobs:
             -backend-config="secret_key=${{ secrets.SEL_S3_SECRET_KEY }}"
           terraform apply -auto-approve -input=false && \
           source ./.out/.env && \
-          terraform output -json # | kubeone apply -m ./.out/kubeone.yaml --auto-approve  -t -
+          terraform output -json | kubeone apply -m ./.out/kubeone.yaml --auto-approve  -t -

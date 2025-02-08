@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
+name: deploy-project
 
-name: CI
-
-# Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   #push:
@@ -28,14 +25,32 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      # Install terraform
       - uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: 1.9.5
 
-      # Runs a single command using the runners shell
-      - name: Check TF version
-        run: terraform version
+      - name: Setup kubeone
+        run: curl -sfL https://get.kubeone.io | sh
         
-      # Plan
-      - name: Terraform plan
-        run: cd ${{vars.BOOTSTRAP_DIR}} && terraform init && terraform plan 
+      - name: Bootstrap k8s cluster
+        run: |
+          cd ${{vars.BOOTSTRAP_DIR}}
+          terraform init \
+            -backend-config="endpoints={ s3 = \"https://${{ secrets.SEL_S3_URL }}\" }" \
+            -backend-config="key=${{ secrets.SEL_S3_KEY }}" \
+            -backend-config="region=ru-1" \
+            -backend-config="skip_region_validation=true" \
+            -backend-config="skip_credentials_validation=true" \
+            -backend-config="skip_requesting_account_id=true" \
+            -backend-config="skip_s3_checksum=true" \
+            -backend-config="skip_metadata_api_check=true" \
+            -backend-config="bucket=${{ secrets.SEL_S3_BUCKET }}" \
+            -backend-config="access_key=${{ secrets.SEL_S3_ACCESS_KEY }}" \
+            -backend-config="secret_key=${{ secrets.SEL_S3_SECRET_KEY }}"
+          terraform apply -auto-approve -input=false && \
+          terraform output -json > .out/tf.json && \
+          cd .out && \
+          source .env && \
+          kubeone apply -t tf.json --auto-approve
+          kubeone config machinedeployments -t tf.json > kubeone-machinedeployments.yaml

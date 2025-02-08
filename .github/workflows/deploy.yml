@@ -50,6 +50,6 @@ jobs:
             -backend-config="secret_key=${{ secrets.SEL_S3_SECRET_KEY }}"
           terraform apply -auto-approve -input=false && \
           terraform output -json > .out/tf.json && \
-          cd .out && ls -l && \
+          cd .out && ls -la && \
           source .env && \
-          kubeone --help #apply -t tf.json --auto-approve
+          kubeone apply -t tf.json -m kubeone.yaml --auto-approve

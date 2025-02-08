@@ -13,6 +13,7 @@ terraform {
       version = "2.5.1"
     }
   }
+  backend "s3" {}
 }
 provider "selectel" {
   auth_url    = var.sel_auth_url

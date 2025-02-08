@@ -14,18 +14,12 @@ env:
   TF_VAR_sel_admin_user:     "${{ secrets.TF_VAR_sel_admin_user }}"
   TF_VAR_sel_admin_password: "${{ secrets.TF_VAR_sel_admin_password }}"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   bootstrap:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      # Install terraform
       - uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: 1.9.5

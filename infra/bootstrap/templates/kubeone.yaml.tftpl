@@ -1,0 +1,37 @@
+apiVersion: kubeone.k8c.io/v1beta2
+kind: KubeOneCluster
+versions:
+  kubernetes: '1.31.2'
+cloudProvider:
+  external: true
+  openstack: {}
+  cloudConfig: |
+    [Global]
+    auth-url=${auth_url}
+    tenant-id=${tenant_id}
+    project-id=${tenant_id}
+    project-domain-name=${domain_id}
+    region=${region}
+    user-domain-name=${domain_id}
+    username=${username}
+    password=${password}
+#    tls-insecure=true
+#    [Networking]
+#    ipv6-support-disabled=true
+#    #    internal-network-name=$internal_network_name}
+#    [LoadBalancer]
+#    enabled=false
+#    floating-network-id=$floating_network_id}
+#    floating-subnet-id=$floating_subnet_id}
+#    subnet-id=$subnet_id}
+clusterNetwork:
+  cni:
+    canal:
+      mtu: 1400
+      #enableHubble: true
+#      kubeProxyReplacement: "disabled"
+#addons:
+#  enable: true
+#  addons:
+#  - name: csi-external-snapshotter
+#    delete: true

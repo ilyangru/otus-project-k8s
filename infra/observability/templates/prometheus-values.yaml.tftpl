@@ -1,0 +1,56 @@
+alertmanager:
+  alertmanagerSpec:
+   affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: ${ affinity_key }
+              operator: In
+              values:
+              - ${ affinity_value }
+prometheusOperator:
+  admissionWebhooks:
+    patch:
+      affinity:
+        nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: ${ affinity_key }
+                  operator: In
+                  values:
+                  - ${ affinity_value }
+  affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: ${ affinity_key }
+              operator: In
+              values:
+              - ${ affinity_value }
+  prometheusSpec:
+       affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: ${ affinity_key }
+                  operator: In
+                  values:
+                  - ${ affinity_value }
+grafana:
+  enabled: true
+  adminPassword: ${grafana_admin_password}
+  ingress:
+    enabled: false
+    # hosts:
+    #   - grafana.domain.com
+    tls: []
+    # - secretName: grafana-general-tls
+    #   hosts:
+    #   - grafana.example.com
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"

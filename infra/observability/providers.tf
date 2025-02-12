@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.16.1"
     }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
   }
   backend "s3" {
     key = "observability.tfstate"
@@ -13,4 +17,7 @@ provider "helm" {
   kubernetes {
     config_path = "${path.module}/../bootstrap/.out/k8s-project-kubeconfig"
   }
+}
+provider "kubectl" {
+  config_path = "${path.module}/../bootstrap/.out/k8s-project-kubeconfig"
 }

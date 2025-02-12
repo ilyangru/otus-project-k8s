@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: le-prod
+spec:
+  acme:
+    email: ilya.n.gavrilov@gmail.com
+    preferredChain: ""
+    privateKeySecretRef:
+      name: cluster-issuer-production
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

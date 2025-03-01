@@ -177,3 +177,11 @@ output "kubeone_static_workers" {
 #     }
 #   }
 # }
+output "otus_project" {
+  value = {
+    tenant_id = selectel_vpc_project_v2.project_otus.id
+    user_name = selectel_iam_serviceuser_v1.project_otus.name
+    password    = selectel_iam_serviceuser_v1.project_otus.password
+  }
+  sensitive = true
+}

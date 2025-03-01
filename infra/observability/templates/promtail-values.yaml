@@ -1,0 +1,10 @@
+daemonset:
+  # -- Deploys Promtail as a DaemonSet
+  enabled: true
+config:
+  clients:
+    - url: http://loki-gateway.default.svc.cluster.local/loki/api/v1/push
+      tenant_id: 1
+tolerations:
+  - operator: Exists
+    effect: NoSchedule

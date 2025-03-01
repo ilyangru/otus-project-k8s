@@ -1,0 +1,14 @@
+---
+# basic.ru-1a.yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: basic.ru-2
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: cinder.csi.openstack.org
+parameters:
+  type: basic.ru-2c
+  availability: ru-2c
+  fsType: ext4
+allowVolumeExpansion: true

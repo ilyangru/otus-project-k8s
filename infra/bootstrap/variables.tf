@@ -73,42 +73,9 @@ variable "static_worker_node_group" {   # STATIC WORKERS (https://docs.kubermati
     count = number        #   Initial node count
     public_ip4 = bool     #   Needs public IPv4 ?
     labels = list(string) #   Server and k8s node labels, like "labelName=labelValue"
-    taints = list(string) #   k8s node taints, like "taintKey=taintValue:Effect"
+    taints = list(map(string)) #   k8s node taints, like "taintKey=taintValue:Effect"
   }))
   default = {
-    monitoring = {
-      type       = "sys"
-      image      = "Ubuntu 22.04 LTS 64-bit"
-      datacenter = "ru-2c"
-      count      = 1
-      public_ip4 = false
-      labels     = [ "worker-group=monitoring",
-                     "worker-group-type=system"
-      ]
-      taints     = []
-    }
-    logging = {
-      type       = "sys"
-      image      = "Ubuntu 22.04 LTS 64-bit"
-      datacenter = "ru-2c"
-      count      = 1
-      public_ip4 = false
-      labels     = [ "worker-group=logging",
-                     "worker-group-type=system"
-      ]
-      taints     = []
-    }
-    worker = {
-      type       = "worker"
-      image      = "Ubuntu 22.04 LTS 64-bit"
-      datacenter = "ru-2c"
-      count      = 1
-      public_ip4 = false
-      labels     = [ "worker-group=worker",
-                     "worker-group-type=payload"
-      ]
-      taints     = []
-    }
   }
 }
 variable "worker_node_group" {   # WORKERS (MachineDeployments CRDs) nodes

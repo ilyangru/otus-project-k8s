@@ -80,7 +80,7 @@ resource "helm_release" "loki" {
   create_namespace = true
   wait             = true
   wait_for_jobs    = true
-  values = [
+  values = sensitive([
     templatefile("${path.module}/templates/loki-values.yaml.tftpl",
       {
         s3_endpoint_url = var.bootstrap_state_s3_url
@@ -92,7 +92,7 @@ resource "helm_release" "loki" {
         s3_bucket_loki_admin = openstack_objectstorage_container_v1.loki_admin.name
       }
     )
-  ]
+  ])
 }
 resource "helm_release" "promtail" {
   depends_on = [

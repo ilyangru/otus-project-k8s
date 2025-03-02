@@ -8,7 +8,7 @@ export TF_VAR_bootstrap_state_s3_secret_key=$SEL_S3_SECRET_KEY
 # kubectl --namespace prometheus-operator --kubeconfig ../bootstrap/.out/k8s-project-kubeconfig get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 
 terraform init \
-    -backend-config="endpoints={ s3 = \"https://$SEL_S3_URL\" }" \
+    -backend-config="endpoints={ s3 = \"https://s3.ru-1.storage.selcloud.ru\" }" \
     -backend-config="region=ru-1" \
     -backend-config="skip_region_validation=true" \
     -backend-config="skip_credentials_validation=true" \

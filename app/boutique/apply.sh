@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 terraform init \
-    -backend-config="endpoints={ s3 = \"https://$SEL_S3_URL\" }" \
+    -backend-config="endpoints={ s3 = \"https://s3.ru-1.storage.selcloud.ru\" }" \
     -backend-config="region=ru-1" \
     -backend-config="skip_region_validation=true" \
     -backend-config="skip_credentials_validation=true" \

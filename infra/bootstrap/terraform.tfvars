@@ -35,7 +35,7 @@ static_worker_node_group = {
       type       = "worker"
       image      = "Ubuntu 22.04 LTS 64-bit"
       datacenter = "ru-2c"
-      count      = 1
+      count      = 2
       public_ip4 = false
       labels     = [ "worker-group=worker",
                      "worker-group-type=payload"

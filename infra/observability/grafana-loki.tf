@@ -85,8 +85,8 @@ resource "helm_release" "loki" {
       {
         s3_endpoint_url = var.bootstrap_state_s3_url
         s3_region = "ru-1"
-        s3_access_key = selectel_iam_s3_credentials_v1.loki.access_key
-        s3_secret_key = selectel_iam_s3_credentials_v1.loki.secret_key
+        s3_access_key = sensitive(selectel_iam_s3_credentials_v1.loki.access_key)
+        s3_secret_key = sensitive(selectel_iam_s3_credentials_v1.loki.secret_key)
         s3_bucket_loki_data = openstack_objectstorage_container_v1.loki_data.name
         s3_bucket_loki_ruler = openstack_objectstorage_container_v1.loki_ruler.name
         s3_bucket_loki_admin = openstack_objectstorage_container_v1.loki_admin.name

@@ -54,21 +54,6 @@ output "kubeone_hosts" {
 }
 output "kubeone_static_workers" {
   description = "Static workers config"
-  # value = {
-  #   workers = {
-  #     private_address      = [ for cur_worker in openstack_compute_instance_v2.static_worker: cur_worker.access_ip_v4 ] #flatten([ for cur_port in openstack_networking_port_v2.static_node_port: [for cur_ipset in cur_port: cur_ipset] ])
-  #     hostnames            = [ for cur_worker in openstack_compute_instance_v2.static_worker: cur_worker.name ]
-  #     ssh_agent_socket     = ""
-  #     ssh_port             = 22
-  #     ssh_private_key_file = "${path.cwd}/${local_sensitive_file.sshkey.filename}"
-  #     ssh_user             = local.ssh_username
-  #     bastion              = openstack_networking_floatingip_v2.node_ext_ip["k8s-project-bastion-1"].address
-  #     bastion_port         = 22
-  #     bastion_user         = local.bastion_user
-  #     bastion_host_key     = null
-  #     labels               = {}
-  #   }
-  # }
   value = {
     for group_name, group_val in var.static_worker_node_group:
       group_name => {
@@ -83,10 +68,13 @@ output "kubeone_static_workers" {
       bastion_user         = local.bastion_user
       bastion_host_key     = null
       labels               = { for cur_label in group_val.labels: split("=",cur_label)[0] => split("=",cur_label)[1] if length(split("=",cur_label))==2 }
+      # taints               = { for cur_taint in group_val.taints:  cur_taint.key => cur_taint.value, "effect" => cur_taint.effect }
       }
   }
 }
 
+# Не удалось настроить развертывание кластера через динамические воркеры (ниже), в проекте используются статические (выше)
+#
 # output "kubeone_workers" {
 #   description = "Workers definitions, that will be transformed into MachineDeployment object"
 #
@@ -117,66 +105,6 @@ output "kubeone_static_workers" {
 #   }
 # }
 
-# DEFAULT DEMO CONFIG FOR DYNAMIC WORKERS
-# output "kubeone_workers" {
-#   description = "Workers definitions, that will be transformed into MachineDeployment object"
-#
-#   value = {
-#     # following outputs will be parsed by kubeone and automatically merged into
-#     # corresponding (by name) worker definition
-#     "${var.cluster_name}-pool1" = {
-#       replicas = var.initial_machinedeployment_replicas
-#       providerSpec = {
-#         annotations = {
-#           "k8c.io/operating-system-profile"                           = var.initial_machinedeployment_operating_system_profile
-#           "cluster.k8s.io/cluster-api-autoscaler-node-group-min-size" = tostring(local.cluster_autoscaler_min_replicas)
-#           "cluster.k8s.io/cluster-api-autoscaler-node-group-max-size" = tostring(local.cluster_autoscaler_max_replicas)
-#         }
-#         sshPublicKeys   = [file(var.ssh_public_key_file)]
-#         operatingSystem = var.worker_os
-#         operatingSystemSpec = {
-#           distUpgradeOnBoot = false
-#           disableAutoUpdate = var.disable_auto_update
-#           disableLocksmithD = var.disable_auto_update
-#         }
-#         # nodeAnnotations are applied on resulting Node objects
-#         # nodeAnnotations = {
-#         #   "key" = "value"
-#         # }
-#         # machineObjectAnnotations are applied on resulting Machine objects
-#         # uncomment to following to set those kubelet parameters. More into at:
-#         # https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/
-#         # machineObjectAnnotations = {
-#         #   "v1.kubelet-config.machine-controller.kubermatic.io/SystemReserved" = "cpu=200m,memory=200Mi"
-#         #   "v1.kubelet-config.machine-controller.kubermatic.io/KubeReserved"   = "cpu=200m,memory=300Mi"
-#         #   "v1.kubelet-config.machine-controller.kubermatic.io/EvictionHard"   = ""
-#         #   "v1.kubelet-config.machine-controller.kubermatic.io/MaxPods"        = "110"
-#         # }
-#         cloudProviderSpec = {
-#           # provider specific fields:
-#           # see example under `cloudProviderSpec` section at:
-#           # https://github.com/kubermatic/machine-controller/blob/main/examples/openstack-machinedeployment.yaml
-#           image          = data.openstack_images_image_v2.image.name
-#           flavor         = var.worker_flavor
-#           securityGroups = [openstack_networking_secgroup_v2.securitygroup.name]
-#           network        = openstack_networking_network_v2.network.name
-#           subnet         = openstack_networking_subnet_v2.subnet.name
-#           configDrive    = var.config_drive
-#           # floatingIpPool = var.external_network_name
-#           # Optional: If set, the rootDisk will be a volume.
-#           # Otherwise, the rootDisk will be on ephemeral storage and its size will
-#           # be derived from the flavor
-#           # rootDiskSizeGB = 50
-#           # Optional: limit how many volumes can be attached to a node
-#           # nodeVolumeAttachLimit = 25
-#           tags = {
-#             "${var.cluster_name}-workers" = "pool1"
-#           }
-#         }
-#       }
-#     }
-#   }
-# }
 output "otus_project" {
   value = {
     tenant_id = selectel_vpc_project_v2.project_otus.id

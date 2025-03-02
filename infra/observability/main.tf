@@ -15,7 +15,8 @@ locals {
 resource "helm_release" "prometheus" {
   depends_on = [
     kubectl_manifest.cert_manager_clusterissuer,
-    helm_release.ingress_nginx
+    helm_release.ingress_nginx,
+    helm_release.promtail,
   ]
   repository       = "https://prometheus-community.github.io/helm-charts"
   chart            = "kube-prometheus-stack"

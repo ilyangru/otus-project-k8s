@@ -57,6 +57,7 @@ jobs:
             export TF_VAR_bootstrap_state_s3_access_key=${{ secrets.SEL_S3_ACCESS_KEY }}
             export TF_VAR_bootstrap_state_s3_secret_key=${{ secrets.SEL_S3_SECRET_KEY }}
           ls -l ./../bootstrap/
+          ls -l ./../bootstrap/.out/          
           terraform init \
             -backend-config="endpoints={ s3 = \"https://${{ secrets.SEL_S3_URL }}\" }" \
             -backend-config="region=ru-1" \

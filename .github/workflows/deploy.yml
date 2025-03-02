@@ -44,8 +44,10 @@ jobs:
             -backend-config="access_key=${{ secrets.SEL_S3_ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SEL_S3_SECRET_KEY }}"
           terraform apply -auto-approve -input=false && \
-          source ./.out/.env && \
-          terraform output -json | kubeone apply -m ./.out/kubeone.yaml --auto-approve  -t -
+          terraform output -json > .out/tf.json && \
+          cd .out && \
+          source .env && \
+          kubeone apply -t tf.json -m kubeone.yaml --auto-approve
           popd
 
       - name: Configure observability
@@ -72,7 +74,7 @@ jobs:
           terraform apply -auto-approve -input=false
           popd
 
-      - name: Deploy Google Boutique App
+      - name: Deploy Google Boutique Demo App
         run: |
           pushd ${{vars.BOUTIQUE_DIR}}
           terraform init \

@@ -30,7 +30,7 @@ jobs:
         
       - name: Bootstrap k8s cluster
         run: |
-          cd ${{vars.BOOTSTRAP_DIR}}
+          pushd ${{vars.BOOTSTRAP_DIR}}
           terraform init \
             -backend-config="endpoints={ s3 = \"https://${{ secrets.SEL_S3_URL }}\" }" \
             -backend-config="key=${{ secrets.SEL_S3_KEY }}" \
@@ -46,3 +46,16 @@ jobs:
           terraform apply -auto-approve -input=false && \
           source ./.out/.env && \
           terraform output -json | kubeone apply -m ./.out/kubeone.yaml --auto-approve  -t -
+          popd
+
+      - name: Configure monitoring
+        run: |
+          pushd ${{vars.OBSERVABILITY_DIR}}
+          bash ./apply.sh
+          popd
+
+      - name: Deploy Google Boutique App
+        run: |
+          pushd ${{vars.BOUTIQUE_DIR}}
+          bash ./apply.sh
+          popd

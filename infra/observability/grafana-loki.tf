@@ -64,11 +64,13 @@ resource "openstack_objectstorage_container_v1" "loki_admin" {
   # container_read = "*:*" #"${data.terraform_remote_state.bootstrap.outputs.otus_project.tenant_id}:${selectel_iam_serviceuser_v1.loki.id}"
   # container_write = "*:*" #"${data.terraform_remote_state.bootstrap.outputs.otus_project.tenant_id}:${selectel_iam_serviceuser_v1.loki.id}"
 }
-
+resource "kubectl_manifest" "default_storage_class" {
+  yaml_body = file("${path.module}/templates/default-storage-class.yaml")
+  wait = true
+}
 resource "helm_release" "loki" {
   depends_on = [
-    kubectl_manifest.cert_manager_clusterissuer,
-    helm_release.ingress_nginx
+    kubectl_manifest.default_storage_class,
   ]
   repository       = "https://grafana.github.io/helm-charts"
   chart            = "loki"
